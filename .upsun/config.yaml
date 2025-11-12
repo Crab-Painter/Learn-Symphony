@@ -52,7 +52,7 @@ applications:
 
                 curl -fs https://get.symfony.com/cloud/configurator | bash
                 
-                NODE_VERSION=22 symfony-build
+                symfony-build
 
             deploy: |
                 set -x -e
