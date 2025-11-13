@@ -16,5 +16,7 @@ services:
 
 volumes:
 ###> doctrine/doctrine-bundle ###
-  database_data:
+  database:
+      ports:
+      - "5432"
 ###< doctrine/doctrine-bundle ###
