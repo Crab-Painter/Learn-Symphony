@@ -13,7 +13,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class CommentRepository extends ServiceEntityRepository
 {
-    public const COMMENTS_PER_PAGE = 5;
+    public const COMMENTS_PER_PAGE = 2;
 
     public function __construct(ManagerRegistry $registry)
     {
