@@ -30,6 +30,7 @@ web:
             passthru: "/index.php"
 
 mounts:
+    "/public/uploads": { source: local, source_path: uploads }
     "/var/cache": { source: local, source_path: var/cache }
     
 
