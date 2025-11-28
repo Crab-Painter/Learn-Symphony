@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Conference;
+use App\Entity\Comment;
+use App\Form\CommentType;
+use App\Repository\ConferenceRepository;
+use App\Repository\CommentRepository;
+use App\SpamChecker;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Repository\ConferenceRepository;
-use App\Repository\CommentRepository;
-use App\Entity\Conference;
-use App\Entity\Comment;
-use App\Form\CommentType;
-use Doctrine\ORM\EntityManagerInterface;
 
 final class ConferenceController extends AbstractController
 {
@@ -35,6 +36,7 @@ final class ConferenceController extends AbstractController
         Request $request,
         Conference $conference,
         CommentRepository $commentRepository,
+        SpamChecker $spamChecker,
         #[Autowire('%photo_dir%')] string $photoDir,
     ): Response {
         $comment = new Comment();
