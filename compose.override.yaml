@@ -7,18 +7,18 @@ services:
 ###< doctrine/doctrine-bundle ###
 
 ###> symfony/mailer ###
-  mailer:
+mailer:
     image: axllent/mailpit
     ports:
-      - "1025"
-      - "8025"
+    - "1025"
+    - "8025"
     environment:
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    MP_SMTP_AUTH_ACCEPT_ANY: 1
+    MP_SMTP_AUTH_ALLOW_INSECURE: 1
 ###< symfony/mailer ###
 
 ###> blackfireio/blackfire-symfony-meta ###
-  blackfire:
+blackfire:
     image: blackfire/blackfire:2
     # uncomment to store Blackfire credentials in a local .env.local file
     #env_file: .env.local

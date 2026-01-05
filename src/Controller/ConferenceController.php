@@ -17,9 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
+
 final class ConferenceController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $bus)
+    public function __construct(private EntityManagerInterface $entityManager, private MessageBusInterface $bus, private MailerInterface $mailer, #[Autowire('%admin_email%')] private string $adminEmail)
     {
 
     }
@@ -61,7 +64,15 @@ final class ConferenceController extends AbstractController
                 'referrer' => $request->headers->get('referer'),
                 'permalink' => $request->getUri(),
             ];
-            $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
+			$this->mailer->send(
+				(new NotificationEmail())
+                ->subject('New comment posted')
+                ->htmlTemplate('emails/comment_notification.html.twig')
+                ->from($this->adminEmail)
+                ->to($this->adminEmail)
+                ->context(['comment' => $comment])
+            );
+            // $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
             return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
         }
