@@ -2,6 +2,7 @@
 
 namespace App\MessageHandler;
 
+use App\ImageOptimizer;
 use App\Message\CommentMessage;
 use App\Repository\CommentRepository;
 use App\SpamChecker;
@@ -26,6 +27,8 @@ class CommentMessageHandler
 		private MailerInterface $mailer,
         #[Autowire('%admin_email%')] private string $adminEmail,
 		private ?LoggerInterface $logger = null,
+		private ImageOptimizer $imageOptimizer,
+		#[Autowire('%photo_dir%')] private string $photoDir,
     ) {
     }
 
@@ -52,6 +55,12 @@ class CommentMessageHandler
                 ->to($this->adminEmail)
                 ->context(['comment' => $comment])
             );
+		} elseif ($this->commentStateMachine->can($comment, 'optimize')) {
+            if ($comment->getPhotoFilename()) {
+                $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
+            }
+            $this->commentStateMachine->apply($comment, 'optimize');
+            $this->entityManager->flush();
         } elseif ($this->logger) {
             $this->logger->debug('No processing was applied to comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
 		}
